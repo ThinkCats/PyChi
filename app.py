@@ -106,4 +106,4 @@ def check_out(food_id, session):
 if __name__ == '__main__':
     logger.info('----- begin run ----------')
     scheduler()
-    run(host='127.0.0.1', port=8000)
+    run(host='0.0.0.0', port=8000)
