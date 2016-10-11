@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup as bsp
 import time
 import json
 import requests
+import logging
+
+logging.basicConfig(filename='logger.log',format='%(asctime)s %(name)-4s %(levelname)-4s: %(message)s',level=logging.INFO)
 
 
 def get_now():
@@ -11,8 +14,7 @@ def get_now():
 
 def myJob():
     now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-    print(now)
-    print('begin check out job')
+    logging.info('begin check out job')
     s = login()
     menus = get_menu(s)
     food_id = get_food_id(menus)
@@ -54,10 +56,10 @@ def get_food_id(text):
     li_data = soup.find_all('li', class_='grid-row')
     if len(li_data) > 0:
         food_id = li_data[0]['data-id']
-        print('food id:', food_id)
+        logging.info('food id:', food_id)
         return food_id
     else:
-        print('无可选菜品')
+        logging.info('无可选菜品')
         return None
 
 
@@ -73,7 +75,7 @@ def check_out(food_id, session):
     }
     result = session.post(check_out_url, check_out_data)
     result.encoding = 'utf8'
-    print('check out result:', result.text)
+    logging.info('check out result:', result.text)
 
 if __name__ == '__main__':
     scheduler()
