@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
 
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from bs4 import BeautifulSoup as bsp
+from bottle import route,run
 import time
 import json
 import requests
@@ -28,6 +29,9 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
+@route('/')
+def index():
+    return 'hello world'
 
 
 def get_now():
@@ -45,7 +49,7 @@ def myJob():
 
 
 def scheduler():
-    sched = BlockingScheduler()
+    sched = BackgroundScheduler()
     sched.add_job(myJob, 'cron', day="*", hour='10', minute='1', second='1')
     sched.start()
 
@@ -102,3 +106,4 @@ def check_out(food_id, session):
 if __name__ == '__main__':
     logger.info('----- begin run ----------')
     scheduler()
+    run(host='127.0.0.1', port=8000)

@@ -1,5 +1,10 @@
+altgraph==0.12
 APScheduler==3.2.0
 beautifulsoup4==4.5.1
+bottle==0.12.10
+macholib==1.7
+modulegraph==0.12.1
+PyInstaller==3.2
 pytz==2016.7
 requests==2.11.1
 six==1.10.0
