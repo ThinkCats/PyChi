@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 from bs4 import BeautifulSoup as bsp
 import time
@@ -5,7 +7,27 @@ import json
 import requests
 import logging
 
-logging.basicConfig(filename='logger.log',format='%(asctime)s %(name)-4s %(levelname)-4s: %(message)s',level=logging.INFO)
+# 创建一个logger
+logger = logging.getLogger('mylogger')
+logger.setLevel(logging.DEBUG)
+
+# 创建一个handler，用于写入日志文件
+fh = logging.FileHandler('logger.log')
+fh.setLevel(logging.DEBUG)
+
+# 再创建一个handler，用于输出到控制台
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# 定义handler的输出格式
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+
+# 给logger添加handler
+logger.addHandler(fh)
+logger.addHandler(ch)
+
 
 
 def get_now():
@@ -14,7 +36,7 @@ def get_now():
 
 def myJob():
     now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-    logging.info('begin check out job')
+    logger.info('begin check out job')
     s = login()
     menus = get_menu(s)
     food_id = get_food_id(menus)
@@ -24,15 +46,15 @@ def myJob():
 
 def scheduler():
     sched = BlockingScheduler()
-    sched.add_job(myJob, 'cron', day="*", hour='9', minute='32', second='1')
+    sched.add_job(myJob, 'cron', day="*", hour='10', minute='1', second='1')
     sched.start()
 
 
 def login():
     s = requests.session()
     login_data = {
-        'LoginForm[username]': 'yourusername',
-        'LoginForm[password]': 'yourpassword md5',
+        'LoginForm[username]': '18357118527',
+        'LoginForm[password]': '74dc7108dc671dc5b3b38c493cbcc4df',
         'LoginForm[autoLogin]': '1',
         'yt0': '登录'}
     s.post('http://wos.chijidun.com/login.html', login_data)
@@ -56,10 +78,10 @@ def get_food_id(text):
     li_data = soup.find_all('li', class_='grid-row')
     if len(li_data) > 0:
         food_id = li_data[0]['data-id']
-        logging.info('food id:', food_id)
+        logger.info('food id:', food_id)
         return food_id
     else:
-        logging.info('无可选菜品')
+        logger.info('无可选菜品')
         return None
 
 
@@ -75,7 +97,7 @@ def check_out(food_id, session):
     }
     result = session.post(check_out_url, check_out_data)
     result.encoding = 'utf8'
-    logging.info('check out result:', result.text)
+    logger.info('check out result:', result.text)
 
 if __name__ == '__main__':
     scheduler()
