@@ -100,4 +100,5 @@ def check_out(food_id, session):
     logger.info('check out result:', result.text)
 
 if __name__ == '__main__':
+    logger.info('----- begin run ----------')
     scheduler()
