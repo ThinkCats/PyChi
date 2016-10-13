@@ -2,7 +2,8 @@
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from bs4 import BeautifulSoup as bsp
-from bottle import route,run
+from bottle import route, run
+from datetime import date
 import time
 import json
 import requests
@@ -21,13 +22,18 @@ ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 
 # 定义handler的输出格式
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 ch.setFormatter(formatter)
 
 # 给logger添加handler
 logger.addHandler(fh)
 logger.addHandler(ch)
+
+food_wanted_list = ['15868', '15394', '16731']
+defult_food = ['16642', '15614']
+
 
 @route('/')
 def index():
@@ -57,8 +63,8 @@ def scheduler():
 def login():
     s = requests.session()
     login_data = {
-        'LoginForm[username]': 'YourName',
-        'LoginForm[password]': 'YourPassword MD5',
+        'LoginForm[username]': '18357118527',
+        'LoginForm[password]': '74dc7108dc671dc5b3b38c493cbcc4df',
         'LoginForm[autoLogin]': '1',
         'yt0': '登录'}
     s.post('http://wos.chijidun.com/login.html', login_data)
@@ -80,16 +86,23 @@ def get_food_id(text):
     data = json_str['data']
     soup = bsp(data, "html.parser")
     li_data = soup.find_all('li', class_='grid-row')
+    logger.info(li_data)
     if len(li_data) > 0:
-        food_id = li_data[0]['data-id']
-        logger.info('food id:', food_id)
-        return food_id
+        for food in li_data:
+            food_id = food['data-id']
+            if str(food_id) in str(food_wanted_list):
+                return food_id
     else:
-        logger.info('无可选菜品')
-        return None
+        logger.info('No HeiErShe, Check Default Food')
+        idx = (date.today().day) % 2
+        return defult_food[idx]
 
 
 def check_out(food_id, session):
+    idx = (date.today().day) % 2
+    if food_id is None:
+        food_id = defult_food[idx]
+
     check_out_url = 'http://wos.chijidun.com/order/saveOrder.html'
     now = get_now()
     check_out_data = {
@@ -108,4 +121,3 @@ if __name__ == '__main__':
     scheduler()
     logger.info('------ run web ----------')
     run(host='0.0.0.0', port=8000)
-
