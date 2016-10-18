@@ -63,8 +63,8 @@ def scheduler():
 def login():
     s = requests.session()
     login_data = {
-        'LoginForm[username]': '18357118527',
-        'LoginForm[password]': '74dc7108dc671dc5b3b38c493cbcc4df',
+        'LoginForm[username]': 'username',
+        'LoginForm[password]': 'pwd md5',
         'LoginForm[autoLogin]': '1',
         'yt0': '登录'}
     s.post('http://wos.chijidun.com/login.html', login_data)
