@@ -31,7 +31,7 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
-food_wanted_list = ['15868', '15394', '16731']
+food_wanted_list = ['15868', '15394', '16731','16980','16973','16480','16736']
 defult_food = ['16642', '15614']
 
 
@@ -63,8 +63,8 @@ def scheduler():
 def login():
     s = requests.session()
     login_data = {
-        'LoginForm[username]': 'YourUserName',
-        'LoginForm[password]': 'YourPassword MD5',
+        'LoginForm[username]': '18357118527',
+        'LoginForm[password]': '74dc7108dc671dc5b3b38c493cbcc4df',
         'LoginForm[autoLogin]': '1',
         'yt0': '登录'}
     s.post('http://wos.chijidun.com/login.html', login_data)
