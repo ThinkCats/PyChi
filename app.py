@@ -122,7 +122,7 @@ def check_out(food_id, session):
     }
     result = session.post(check_out_url, check_out_data)
     result.encoding = 'utf8'
-    logger.info('check out result:', result.text)
+    logger.info('check out result: %s' % result.text)
 
 if __name__ == '__main__':
     logger.info('----- begin run ----------')
