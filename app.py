@@ -52,7 +52,8 @@ def myJob():
     food_id = get_food_id(menus)
     if food_id is not None:
         check_out(food_id, s)
-
+    else:
+        logger.error("Unkown Error !!!")
 
 def scheduler():
     sched = BackgroundScheduler()
@@ -63,8 +64,8 @@ def scheduler():
 def login():
     s = requests.session()
     login_data = {
-        'LoginForm[username]': 'username',
-        'LoginForm[password]': 'pwd md5',
+        'LoginForm[username]': '18357118527',
+        'LoginForm[password]': '74dc7108dc671dc5b3b38c493cbcc4df',
         'LoginForm[autoLogin]': '1',
         'yt0': '登录'}
     s.post('http://wos.chijidun.com/login.html', login_data)
@@ -86,17 +87,24 @@ def get_food_id(text):
     data = json_str['data']
     soup = bsp(data, "html.parser")
     li_data = soup.find_all('li', class_='grid-row')
-    logger.info(li_data)
     if len(li_data) > 0:
+        flag = False
         for food in li_data:
             food_id = food['data-id']
             if str(food_id) in str(food_wanted_list):
                 return food_id
+            else:
+                flag = True
+        if flag:
+            logger.info('HeiErShe does not have wanted food')
+            return get_default_food()
     else:
         logger.info('No HeiErShe, Check Default Food')
+        return get_default_food()
+
+def get_default_food():
         idx = (date.today().day) % 2
         return defult_food[idx]
-
 
 def check_out(food_id, session):
     idx = (date.today().day) % 2
