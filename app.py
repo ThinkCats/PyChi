@@ -31,7 +31,7 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
-food_wanted_list = ['15868', '15394', '16731','16980','16973','16480','16736']
+food_wanted_list = ['15868', '15394', '16731','16980','16973','16480','16736','18296','18300','18320']
 defult_food = ['16642', '15614']
 
 
